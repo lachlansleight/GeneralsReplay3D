@@ -169,7 +169,7 @@ const Home = () => {
                     </div>
                     <div className={style.scores}>
                         <div>
-                            <span className={style.stars}>⭐</span>
+                            <span className={style.stars} role="img" aria-label="star">⭐</span>
                             <span className={style.username}>Player</span>
                             <span className={style.army}>Army</span>
                             <span className={style.land}>Land</span>
@@ -179,7 +179,7 @@ const Home = () => {
                             return (
                                 <div key={score + "_" + i}>
                                     <span className={style.stars}>
-                                        ⭐{simulator.game.sockets[index].stars}
+                                        <span role="img" aria-label="star">⭐</span>{simulator.game.sockets[index].stars}
                                     </span>
                                     <span className={style.username}>
                                         {simulator.game.sockets[index].username}

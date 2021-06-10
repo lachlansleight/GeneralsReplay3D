@@ -27,8 +27,8 @@ const useAnim = (callback?: (runTime: number, deltaTime: number) => void, depend
             return () => {
                 if (animationRef.current) cancelAnimationFrame(animationRef.current);
             };
-            // eslint-disable-next-line
         },
+        // eslint-disable-next-line
         dependencies ? [...dependencies, runAnim] : [runAnim]
     );
 };
