@@ -33,7 +33,7 @@ export interface TMove {
 export interface TGame {
     alivePlayers: number;
     cities: number[];
-    deaths: any[];
+    deaths: TSocket[];
     generals: number[];
     inputBuffer: any[];
     leftSockets: any[];

@@ -137,13 +137,15 @@ class Game implements TGame {
 				this.scores[tile].tiles++;
 			}
 		}
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const game = this;
 		this.scores.sort(function (a, b) {
 			if (a.dead && !b.dead)
 				return 1;
 			if (b.dead && !a.dead)
 				return -1;
 			if (a.dead && b.dead) {
-				return this.deaths.indexOf(this.sockets[b.i]) - this.deaths.indexOf(this.sockets[a.i]);
+				return game.deaths.indexOf(game.sockets[b.i]) - game.deaths.indexOf(game.sockets[a.i]);
 			}
 			if (b.total === a.total)
 				return b.tiles - a.tiles;
@@ -227,6 +229,7 @@ class Game implements TGame {
 	static createFromReplay(gameReplay) {
 		const sockets = gameReplay.generals.map(function (g, i) {
 			return {
+				emit: () => {},
 				username: gameReplay.usernames[i],
 				stars: gameReplay.stars ? (gameReplay.stars[i] || 0) : '',
 			};

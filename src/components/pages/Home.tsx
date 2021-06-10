@@ -1,9 +1,8 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Convert from "../../lib/generals-utils/converter";
 import Game from "../../lib/generals-utils/Game";
 import Simulator from "../../lib/generals-utils/simulator";
-import { TMap } from "../../lib/generals-utils/types";
 
 import Layout from "../layout/Layout";
 
@@ -13,8 +12,6 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [simulator, setSimulator] = useState<any>({});
-    const [map, setMap] = useState<TMap>(null);
-    const [game, setGame] = useState<Game>(null);
     const [board, setBoard] = useState<JSX.Element>(null);
 
     const loadReplay = () => {
@@ -30,11 +27,7 @@ const Home = () => {
                 const buffer = await replayGior.arrayBuffer();
                 const replay = Convert(buffer);
                 const sim = new Simulator(replay);
-                console.log(sim);
                 setSimulator(sim);
-                setMap(sim.game.map);
-                setGame(sim.game);
-                updateBoard();
             } catch(err) {
                 setError(err);
             }
@@ -44,9 +37,18 @@ const Home = () => {
         doLoad(replayId);
     }
 
-    const updateBoard = () => {
-        console.log({game, map})
+    useEffect(() => {
+        if(!simulator) return;
+        if(!simulator.game) return;
+        if(!simulator.game.map) return;
+
+        console.log(simulator);
+        updateBoard(simulator.game);
+    }, [simulator])
+
+    const updateBoard = (game: Game) => {
         if(!game) return;
+        const map = game.map;
         if(!map) return;
 
         const tiles: any[] = [];
@@ -73,9 +75,10 @@ const Home = () => {
                     backgroundSize: "cover",
                     backgroundImage: `url("${bg}")`,
                     backgroundColor: map._map[i] >= 0 
-                        ? `hsl(${Math.round(360 * map._map[i] / game.sockets.length)}, 100%, 50%)` 
+                        ? `hsl(${Math.round(360 * map._map[i] / game.sockets.length)}, 100%, 40%)` 
                         : "#666",
-                    color: "#FFF"
+                    color: "#FFF",
+                    fontSize: "0.8rem",
                 }}>{army > 0 ? army : ""}</div>)
             }
         }
@@ -112,10 +115,14 @@ const Home = () => {
                 <div>
                     <button onClick={() => {
                         simulator.nextTurn();
-                        setGame(simulator.game);
-                        setMap(simulator.game.map);
-                        updateBoard();
+                        updateBoard(simulator.game);
                     }}>Next Turn</button>
+                    <button onClick={() => {
+                        setInterval(() => {
+                            simulator.nextTurn();
+                            updateBoard(simulator.game);
+                        }, 10)
+                    }}>Auto Turn</button>
                     {board}
                 </div>
              ) : null}
