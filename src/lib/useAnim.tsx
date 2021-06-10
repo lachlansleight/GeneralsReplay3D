@@ -16,18 +16,21 @@ const useAnim = (callback?: (runTime: number, deltaTime: number) => void, depend
         animationRef.current = requestAnimationFrame(runAnim);
     };
 
-    useEffect(() => {
-        if (animationRef.current) {
-            cancelAnimationFrame(animationRef.current);
-        }
+    useEffect(
+        () => {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
 
-        animationRef.current = requestAnimationFrame(runAnim);
+            animationRef.current = requestAnimationFrame(runAnim);
 
-        return () => {
-            if(animationRef.current) cancelAnimationFrame(animationRef.current);
-        }
-        // eslint-disable-next-line
-    }, dependencies ? [...dependencies, runAnim] : [runAnim]);
+            return () => {
+                if (animationRef.current) cancelAnimationFrame(animationRef.current);
+            };
+            // eslint-disable-next-line
+        },
+        dependencies ? [...dependencies, runAnim] : [runAnim]
+    );
 };
 
 export default useAnim;

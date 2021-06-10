@@ -1,11 +1,12 @@
 import SceneTemplate from "./SceneTemplate";
 
-export type DisplayMode = "div" 
-| "content" 
-| "fixedContent" 
-| "wideContent"
-| "fixedWideContent" 
-| "fullpage";
+export type DisplayMode =
+    | "div"
+    | "content"
+    | "fixedContent"
+    | "wideContent"
+    | "fixedWideContent"
+    | "fullpage";
 
 export interface ThreeSceneProps {
     scene?: SceneTemplate;
