@@ -23,9 +23,10 @@ class BoardScene extends SceneTemplate{
     playerMaterials: THREE.Material[];
     playerMutedMaterials: THREE.Material[];
     neutralMaterial: THREE.Material;
+    neutralCityMaterial: THREE.Material;
     neutralMutedMaterial: THREE.Material;
-    generalGeo: THREE.CylinderGeometry;
-    cityGeo: THREE.CylinderGeometry;
+    generalGeo: THREE.TorusGeometry;
+    cityGeo: THREE.TorusGeometry;
     setTurn = -1;
 
     public attach = (container: HTMLElement) => {
@@ -33,6 +34,8 @@ class BoardScene extends SceneTemplate{
     }
     public setup = () => {
         if(!this.game) throw new Error("Game is not set!");
+
+        this.scene.background = new THREE.Color("#222");
 
         this.camera.position.x = -10.21;
         this.camera.position.y = 13.04;
@@ -44,12 +47,13 @@ class BoardScene extends SceneTemplate{
             const hue = Math.round((i / this.game.sockets.length) * 360);
             this.playerMaterials.push(new THREE.MeshPhongMaterial({color: `hsl(${hue}, 100%, 40%)`}));
             this.playerMaterials.slice(-1)[0].side = THREE.DoubleSide;
-            this.playerMutedMaterials.push(new THREE.MeshPhongMaterial({color: `hsl(${hue}, 20%, 40%)`}));
+            this.playerMutedMaterials.push(new THREE.MeshPhongMaterial({color: `hsl(${hue}, 20%, 70%)`}));
         }
 
         const cubeGeo = new THREE.BoxGeometry(1, 1);
 
         this.neutralMaterial = new THREE.MeshPhongMaterial({color: "#666666"});
+        this.neutralCityMaterial = new THREE.MeshPhongMaterial({color: "#111"});
         this.neutralMutedMaterial = new THREE.MeshPhongMaterial({color: "#CCCCCC"});
         this.neutralMaterial.side = THREE.DoubleSide;
 
@@ -58,13 +62,13 @@ class BoardScene extends SceneTemplate{
 
         const groundGeo = new THREE.PlaneGeometry(0.98, 0.98);
 
-        const cityRadius = 0.65;
+        const cityRadius = 0.5;
 
-        this.cityGeo = new THREE.CylinderGeometry(cityRadius, cityRadius, 0.1, 4, 1, true);
+        this.cityGeo = new THREE.TorusGeometry(cityRadius * 1.4, 0.1, 4, 4);
         const cityMaterial = new THREE.MeshPhongMaterial({color: "#666666"});
         cityMaterial.side = THREE.DoubleSide;
 
-        this.generalGeo = new THREE.CylinderGeometry(cityRadius, cityRadius, 0.25, 8, 1, true);
+        this.generalGeo = new THREE.TorusGeometry(cityRadius * 1.4, 0.2, 8, 16);
         const generalMaterial = new THREE.MeshPhongMaterial({color: "#666666"});
         generalMaterial.side = THREE.DoubleSide;
 
@@ -112,8 +116,10 @@ class BoardScene extends SceneTemplate{
                     this.scene.add(cone);
                 } else {
                     if(isCity) {
-                        const cylinder = new THREE.Mesh(this.cityGeo, this.getMaterial(i));
+                        const cylinder = new THREE.Mesh(this.cityGeo, this.getCityMaterial(i));
                         cylinder.position.set(offsetX, 0.05, offsetY);
+                        cylinder.rotateX(Math.PI * 0.5);
+                        cylinder.rotateZ(Math.PI * 0.25);
                         cylinder.castShadow = true;
                         cylinder.receiveShadow = true;
                         this.scene.add(cylinder);
@@ -124,6 +130,7 @@ class BoardScene extends SceneTemplate{
                     } else if(isGeneral) {
                         const cylinder = new THREE.Mesh(this.generalGeo, this.getMaterial(i));
                         cylinder.position.set(offsetX, 0.125, offsetY);
+                        cylinder.rotateX(Math.PI * 0.5);
                         cylinder.castShadow = true;
                         cylinder.receiveShadow = true;
                         this.scene.add(cylinder);
@@ -140,11 +147,11 @@ class BoardScene extends SceneTemplate{
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         const light = new THREE.DirectionalLight(0xffffff, 0.8)
-        light.position.set(2, 1, 2);
+        light.position.set(20, 15, 20);
         light.castShadow = true;
         light.shadow.mapSize.width = 1024;
         light.shadow.mapSize.height = 1024;
-        const d = 10;
+        const d = 15;
 
         light.shadow.camera.left = - d;
         light.shadow.camera.right = d;
@@ -152,9 +159,9 @@ class BoardScene extends SceneTemplate{
         light.shadow.camera.bottom = - d;
 
         //light.shadow.camera.near = 0.01;
-        light.shadow.camera.far = 50;
+        light.shadow.camera.far = 100;
 
-        const ambient = new THREE.AmbientLight(0x404040);
+        const ambient = new THREE.AmbientLight(0xA0A0A0);
         this.scene.add(light);
         this.scene.add(ambient);
 
@@ -173,6 +180,12 @@ class BoardScene extends SceneTemplate{
             : this.playerMutedMaterials[this.game.map._map[mapIndex]];
     }
 
+    private getCityMaterial = (mapIndex: number) => {
+        return this.game.map._map[mapIndex] < 0 
+            ? this.neutralCityMaterial 
+            : this.playerMaterials[this.game.map._map[mapIndex]];
+    }
+
     public update = () => {
         if(!this.isSetup) return;
 
@@ -180,17 +193,19 @@ class BoardScene extends SceneTemplate{
 
         if(this.setTurn === this.game.turn) return;
         this.setTurn = this.game.turn;
+        console.log(this.game);
 
         for(let i = 0; i < this.generals.length; i++) {
             if(!this.game.generals.includes(this.generals[i].position)) {
                 this.generals[i].mesh.geometry = this.cityGeo;
+                this.generals[i].mesh.rotateZ(Math.PI * 0.25);
                 this.cities.push(this.generals[i]);
             }
         }
         this.generals = this.generals.filter(g => g.mesh.geometry !== this.cityGeo);
         
         for(let i = 0; i < this.cities.length; i++) {
-            this.cities[i].mesh.material = this.getMaterial(this.cities[i].position);
+            this.cities[i].mesh.material = this.getCityMaterial(this.cities[i].position);
         }
 
         for(let y = 0; y < this.game.map.height; y++) {

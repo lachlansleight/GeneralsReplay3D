@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 import { ThreeSceneProps } from "./types";
 
 export const getDisplayModeStyles = (props: ThreeSceneProps) => {
-    const wrapperStyle: CSSProperties = {zIndex: -1000}
+    const wrapperStyle: CSSProperties = {}
     const containerStyle: CSSProperties = {}
 
     switch(props.displayMode ?? "div") {
@@ -10,7 +10,7 @@ export const getDisplayModeStyles = (props: ThreeSceneProps) => {
             containerStyle.height = props.divHeight ?? "100%";
             break;
         case "content":
-            wrapperStyle.position = "absolute";
+            //wrapperStyle.position = "absolute";
             wrapperStyle.top = props.headerHeight + "px";
             wrapperStyle.left = ((window.innerWidth - (props.contentWidth ?? 1000)) / 2) + "px";
             wrapperStyle.width = (props.contentWidth ?? 1000) + "px";
@@ -25,8 +25,8 @@ export const getDisplayModeStyles = (props: ThreeSceneProps) => {
             wrapperStyle.left = "0px";
             wrapperStyle.width = window.innerWidth + "px";
             wrapperStyle.height = (window.innerHeight - ((props.footerHeight ?? 0) + (props.headerHeight ?? 0))) + "px";
-            wrapperStyle.minHeight = document.body.offsetHeight;
-
+            wrapperStyle.minHeight = (window.innerHeight - ((props.footerHeight ?? 0) + (props.headerHeight ?? 0))) + "px";
+            
             containerStyle.height = "100%";
             break;
         case "fixedContent":

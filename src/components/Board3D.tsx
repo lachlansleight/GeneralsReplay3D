@@ -22,7 +22,7 @@ const Board3D = ({game, turn}: {game: Game, turn: number}) => {
     }, [scene, game, turn])
 
     if(!initialized) return null;
-    return <ThreeScene scene={scene} displayMode={"div"} divHeight={1000} />
+    return <ThreeScene scene={scene} displayMode="wideContent" divHeight={1000} headerHeight={64} />
 }
 
 export default Board3D;
