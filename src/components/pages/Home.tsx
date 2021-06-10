@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Constants, { GetBackgroundColor } from "../../lib/generals-utils/Constants";
 import Convert from "../../lib/generals-utils/converter";
 import Simulator from "../../lib/generals-utils/simulator";
 import { TReplay } from "../../lib/generals-utils/types";
@@ -37,6 +38,7 @@ const Home = () => {
 
                 const buffer = await replayGior.arrayBuffer();
                 const replay = Convert(buffer);
+                console.log("Loaded replay", replay);
                 setReplay(replay);
                 const sim = new Simulator(replay);
                 setSimulator(sim);
@@ -64,6 +66,23 @@ const Home = () => {
         }
     };
     useAnim(animCallback, [autoTurn, autoTurnSpeed, simulator, turn]);
+
+    useEffect(() => {
+        const handleKey = (key: any) => {
+            if(key.key === "ArrowRight" && !autoTurn && !simulator.game.isOver()) {
+                simulator.nextTurn();
+                setTurn(simulator.game.turn);
+            }
+            if(key.key === "Space") {
+                setAutoTurn(cur => !cur);
+            }
+        }
+        document.addEventListener('keydown', handleKey);
+        
+        return () => {
+            document.removeEventListener('keydown', handleKey);
+        }
+    }, [simulator, autoTurn])
 
     return (
         <Layout>
@@ -104,6 +123,8 @@ const Home = () => {
                             )}
                             <button
                                 onClick={() => {
+                                    if(simulator.game.isOver()) return;
+
                                     simulator.nextTurn();
                                     setTurn(simulator.game.turn);
                                 }}
@@ -122,6 +143,7 @@ const Home = () => {
                             {autoTurn ? (
                                 <div>
                                     <button
+                                        className={autoTurnSpeed === 0.5 ? style.active : null}
                                         onClick={() => {
                                             setAutoTurn(true);
                                             setAutoTurnSpeed(0.5);
@@ -130,6 +152,7 @@ const Home = () => {
                                         0.5x
                                     </button>
                                     <button
+                                        className={autoTurnSpeed === 1 ? style.active : null}
                                         onClick={() => {
                                             setAutoTurn(true);
                                             setAutoTurnSpeed(1);
@@ -138,6 +161,7 @@ const Home = () => {
                                         1x
                                     </button>
                                     <button
+                                        className={autoTurnSpeed === 2 ? style.active : null}
                                         onClick={() => {
                                             setAutoTurn(true);
                                             setAutoTurnSpeed(2);
@@ -146,6 +170,7 @@ const Home = () => {
                                         2x
                                     </button>
                                     <button
+                                        className={autoTurnSpeed === 5 ? style.active : null}
                                         onClick={() => {
                                             setAutoTurn(true);
                                             setAutoTurnSpeed(5);
@@ -154,6 +179,7 @@ const Home = () => {
                                         5x
                                     </button>
                                     <button
+                                        className={autoTurnSpeed === 10 ? style.active : null}
                                         onClick={() => {
                                             setAutoTurn(true);
                                             setAutoTurnSpeed(10);
@@ -179,9 +205,14 @@ const Home = () => {
                             return (
                                 <div key={score + "_" + i}>
                                     <span className={style.stars}>
-                                        <span role="img" aria-label="star">⭐</span>{simulator.game.sockets[index].stars}
+                                        <div>
+                                            <span className={style.singleStar} role="img" aria-label="star">⭐</span>
+                                            <span className={style.singleStar}>{simulator.game.sockets[index].stars}</span>
+                                        </div>
                                     </span>
-                                    <span className={style.username}>
+                                    <span className={style.username} style={{
+                                        backgroundColor: GetBackgroundColor(replay.playerColors[index])
+                                    }}>
                                         {simulator.game.sockets[index].username}
                                     </span>
                                     <span className={style.army}>{score.total}</span>
@@ -191,7 +222,7 @@ const Home = () => {
                         })}
                     </div>
 
-                    <Board3D game={simulator.game} turn={turn} />
+                    <Board3D game={simulator.game} colors={replay.playerColors.map(c => Constants.colors[c])} turn={turn} />
                 </>
             ) : loading ? (
                 <div className={style.idForm}>

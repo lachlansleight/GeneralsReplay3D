@@ -20,6 +20,12 @@ export interface TReplay {
     teams: any[] | null;
     usernames: string[];
     version: number;
+    neutrals: any[];
+    neutralArmies: any[];
+    swamps: any[];
+    chat: any[];
+    playerColors: number[];
+    lights: any[];
 }
 
 export interface TMove {

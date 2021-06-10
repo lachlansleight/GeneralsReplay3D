@@ -10,7 +10,7 @@ const Navbar = () => {
                 <div className={style.logo}>
                     <div>
                         <Link to={`/`}>
-                            Generals.io 3D Replay<span className={style.versionNumber}>v0.0.1</span>
+                            Generals.io 3D Replay<span className={style.versionNumber}>v1.0.0</span>
                         </Link>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import SceneTemplate from "./ThreeReactUtils/SceneTemplate";
 
 class BoardScene extends SceneTemplate {
     game: Game;
+    colors: number[][];
     controls: OrbitControls;
     onesCubes: THREE.Mesh[];
     hundredsCubes: THREE.Mesh[];
@@ -42,13 +43,18 @@ class BoardScene extends SceneTemplate {
         this.playerMaterials = [];
         this.playerMutedMaterials = [];
         for (let i = 0; i < this.game.sockets.length; i++) {
-            const hue = Math.round((i / this.game.sockets.length) * 360);
+            const color = this.colors[i];
+            const hue = color[0];
+            const sat = color[1];
+            const bri = color[2];
+            const moreBri = 100 - Math.round((100 - bri) * 0.5);
+            //const hue = Math.round((i / this.game.sockets.length) * 360);
             this.playerMaterials.push(
-                new THREE.MeshPhongMaterial({ color: `hsl(${hue}, 100%, 40%)` })
+                new THREE.MeshPhongMaterial({ color: `hsl(${hue}, ${sat}%, ${bri}%)` })
             );
             this.playerMaterials.slice(-1)[0].side = THREE.DoubleSide;
             this.playerMutedMaterials.push(
-                new THREE.MeshPhongMaterial({ color: `hsl(${hue}, 20%, 70%)` })
+                new THREE.MeshPhongMaterial({ color: `hsl(${hue}, ${Math.round(sat * 0.5)}%, ${moreBri}%)` })
             );
         }
 

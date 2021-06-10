@@ -124,6 +124,11 @@
                 border: 0;
                 padding: 0.2rem 1rem;
             }
+
+            button.active {
+                background-color: var(--color-theme-500);
+                color: #fff;
+            }
         }
 
         > button {
@@ -156,6 +161,11 @@
             place-items: center;
             border: 1px solid white;
             font-size: 0.8rem;
+        }
+
+        .singleStar {
+            display: inline;
+            border: none;
         }
     }
 

@@ -32,6 +32,12 @@ function deserialize(buffer: ArrayBuffer): TReplay {
     replay.afks = obj[i++].map(deserializeAFK);
     replay.teams = obj[i++];
     replay.mapTitle = obj[i++]; // only available when version >= 7
+    replay.neutrals = obj[i++] || [];
+    replay.neutralArmies = obj[i++] || [];
+    replay.swamps = obj[i++] || [];
+    replay.chat = (obj[i++] || []).map(deserializeChat);
+    replay.playerColors = obj[i++] || replay.usernames.map((u, i) => i);
+    replay.lights = obj[i++] || [];
 
     return replay;
 }
@@ -50,5 +56,14 @@ function deserializeAFK(serialized: number[]) {
     return {
         index: serialized[0],
         turn: serialized[1],
+    };
+}
+
+function deserializeChat(serialized: number[]) {
+    return {
+        text: serialized[0],
+        prefix: serialized[1],
+        playerIndex: serialized[2],
+        turn: serialized[3],
     };
 }
