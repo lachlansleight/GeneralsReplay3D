@@ -1,5 +1,4 @@
 import axios from "axios";
-import { setServers } from "dns";
 import React, { useRef, useState } from "react";
 import Convert from "../../lib/generals-utils/converter";
 import Simulator from "../../lib/generals-utils/simulator";
