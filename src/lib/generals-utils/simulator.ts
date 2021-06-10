@@ -1,5 +1,3 @@
-'use strict';
-
 // This file reads in example.gioreplay and runs a full game simulation from the replay.
 
 import Game from "./Game";

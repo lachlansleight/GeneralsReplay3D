@@ -1,5 +1,3 @@
-'use strict';
-
 const Constants = {
 	MIN_CITY_ARMY: 40,
 	RECRUIT_RATE: 2, // 1 recruit per city/general every _ turns.

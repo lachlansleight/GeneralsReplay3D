@@ -1,5 +1,3 @@
-'use strict';
-
 import { MapTile, TMap } from "./types";
 
 // @param teams Optional. If supplied, teams[i] is the team for player i.

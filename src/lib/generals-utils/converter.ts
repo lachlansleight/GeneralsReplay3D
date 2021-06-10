@@ -1,4 +1,3 @@
-'use strict';
 import LZString from 'lz-string';
 import { TReplay } from './types';
 

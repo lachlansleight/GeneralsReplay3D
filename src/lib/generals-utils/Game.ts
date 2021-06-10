@@ -1,5 +1,3 @@
-'use strict';
-
 import Map from "./Map";
 import Constants from "./Constants";
 import { MapTile, TGame, TScore, TSocket } from "./types";
@@ -155,7 +153,7 @@ class Game implements TGame {
 	indexOfSocketID(id: number) {
 		let index = -1;
 		for (let i = 0; i < this.sockets.length; i++) {
-			if (this.sockets[i].id == id) {
+			if (this.sockets[i].id === id) {
 				index = i;
 				break;
 			}
@@ -229,6 +227,7 @@ class Game implements TGame {
 	static createFromReplay(gameReplay) {
 		const sockets = gameReplay.generals.map(function (g, i) {
 			return {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				emit: () => {},
 				username: gameReplay.usernames[i],
 				stars: gameReplay.stars ? (gameReplay.stars[i] || 0) : '',

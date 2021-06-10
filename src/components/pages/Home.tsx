@@ -1,8 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import Convert from "../../lib/generals-utils/converter";
-import Game from "../../lib/generals-utils/Game";
 import Simulator from "../../lib/generals-utils/simulator";
+import useAnim from "../../lib/useAnim";
+//import Board2D from "../Board2D";
+import Board3D from "../Board3D";
 
 import Layout from "../layout/Layout";
 
@@ -11,8 +13,11 @@ const Home = () => {
     const [replayId, setReplayId] = useState("rdCnIf1sO");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [simulator, setSimulator] = useState<any>({});
-    const [board, setBoard] = useState<JSX.Element>(null);
+    const [simulator, setSimulator] = useState<Simulator>();
+    const [turn, setTurn] = useState(0);
+    const [autoTurn, setAutoTurn] = useState(false);
+    const [autoTurnSpeed, setAutoTurnSpeed] = useState(1);
+    const lastTurnTime = useRef(0);
 
     const loadReplay = () => {
         const doLoad = async (id: string) => {
@@ -37,66 +42,18 @@ const Home = () => {
         doLoad(replayId);
     }
 
-    useEffect(() => {
-        if(!simulator) return;
-        if(!simulator.game) return;
-        if(!simulator.game.map) return;
-
-        console.log(simulator);
-        updateBoard(simulator.game);
-    }, [simulator])
-
-    const updateBoard = (game: Game) => {
-        if(!game) return;
-        const map = game.map;
-        if(!map) return;
-
-        const tiles: any[] = [];
-        for(let y = 0; y < map.height; y++) {
-            for(let x = 0; x < map.width; x++) {
-                const i = y * map.width + x;
-                const isCity = game.cities.includes(i);
-                const isGeneral = game.generals.includes(i);
-                const isMountain = map._map[i] === -2;
-                const bg = isCity 
-                    ? "img/city.png" 
-                    : isGeneral
-                        ? "img/crown.png"
-                        : isMountain 
-                            ? "img/mountain.png"
-                            : "";
-                const army = map._armies[i];
-                tiles.push(<div key={`tile_${i}`} style={{
-                    boxSizing: "border-box",
-                    border: "1px solid black",
-                    display: "grid",
-                    placeItems: "center",
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                    backgroundImage: `url("${bg}")`,
-                    backgroundColor: map._map[i] >= 0 
-                        ? `hsl(${Math.round(360 * map._map[i] / game.sockets.length)}, 100%, 40%)` 
-                        : "#666",
-                    color: "#FFF",
-                    fontSize: "0.8rem",
-                }}>{army > 0 ? army : ""}</div>)
-            }
+    const animCallback = (time: number) => {
+        if(!autoTurn) return;
+        if(time < lastTurnTime.current + 0.5 / autoTurnSpeed) return;
+        
+        if(!simulator.game.isOver()) {
+            simulator.nextTurn();
+            setTurn(simulator.game.turn);
+            lastTurnTime.current = time;
         }
-        const widthLarger = map.width > map.height;
-        const width = widthLarger ? "1000px" : Math.round(1000 * map.width / map.height) + "px";
-        const height = widthLarger ? Math.round(1000 * map.height / map.width) + "px" : "1000px";
-        setBoard((
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${map.width}, 1fr)`,
-                gridTemplateRows: `repeat(${map.height}, 1fr)`,
-                width,
-                height,
-            }}>
-                {tiles}
-            </div>
-        ));
     }
+    useAnim(animCallback, [autoTurn, autoTurnSpeed, simulator, turn]);
+    
 
     return (
         <Layout>
@@ -111,19 +68,47 @@ const Home = () => {
                     {error ? <p>{error}</p> : null}
                 </div>
             )}
-            {simulator ? (
+            {simulator && simulator.game ? (
                 <div>
                     <button onClick={() => {
                         simulator.nextTurn();
-                        updateBoard(simulator.game);
+                        setTurn(simulator.game.turn);
                     }}>Next Turn</button>
+                    <p>Auto Turn: {autoTurn ? autoTurnSpeed + "x" : "off"}</p>
+                    { autoTurn ? (
+                        <button onClick={() => {
+                            setAutoTurn(false);
+                        }}>Stop Auto Turn</button>
+                    ) : (
+                        <button onClick={() => {
+                            setAutoTurn(true);
+                        }}>Start Auto Turn</button>
+                    )}
                     <button onClick={() => {
-                        setInterval(() => {
-                            simulator.nextTurn();
-                            updateBoard(simulator.game);
-                        }, 10)
-                    }}>Auto Turn</button>
-                    {board}
+                        setAutoTurn(true);
+                        setAutoTurnSpeed(0.5);
+                    }}>0.5x</button>
+                    <button onClick={() => {
+                        setAutoTurn(true);
+                        setAutoTurnSpeed(1);
+                    }}>1x</button>
+                    <button onClick={() => {
+                        setAutoTurn(true);
+                        setAutoTurnSpeed(2);
+                    }}>2x</button>
+                    <button onClick={() => {
+                        setAutoTurn(true);
+                        setAutoTurnSpeed(5);
+                    }}>5x</button>
+                    <button onClick={() => {
+                        setAutoTurn(true);
+                        setAutoTurnSpeed(10);
+                    }}>10x</button>
+                    {turn > 0 ? (
+                        <p>Turn {Math.round((turn + 1) / 2)}{turn % 2 === 1 ? "." : ""}</p>
+                    ) : <p>Turn 0</p>}
+                    
+                    <Board3D game={simulator.game} turn={turn} />
                 </div>
              ) : null}
         </Layout>
