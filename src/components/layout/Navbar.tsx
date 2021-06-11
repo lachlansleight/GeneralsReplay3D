@@ -10,13 +10,13 @@ const Navbar = () => {
                 <div className={style.logo}>
                     <div>
                         <Link to={`/`}>
-                            Generals.io 3D Replay<span className={style.versionNumber}>v1.0.0</span>
+                            Generals.io 3D Replay<span className={style.versionNumber}>v1.1.0</span>
                         </Link>
                     </div>
                 </div>
                 <ul>
                     <li>
-                        <Link to={`/`}>Home</Link>
+                        <a href="https://github.com/lachlansleight/GeneralsReplay3D" target="_blank" rel="noopener noreferrer">Explore on GitHub</a>
                     </li>
                 </ul>
             </div>

@@ -22,6 +22,7 @@ const Home = () => {
     const [turn, setTurn] = useState(0);
     const [autoTurn, setAutoTurn] = useState(false);
     const [autoTurnSpeed, setAutoTurnSpeed] = useState(1);
+    const autoTurnButton = useRef<HTMLButtonElement>(null);
     const lastTurnTime = useRef(0);
 
     const loadReplay = () => {
@@ -73,8 +74,8 @@ const Home = () => {
                 simulator.nextTurn();
                 setTurn(simulator.game.turn);
             }
-            if(key.key === "Space") {
-                setAutoTurn(cur => !cur);
+            if(key.key === " ") {
+                autoTurnButton.current.click();
             }
         }
         document.addEventListener('keydown', handleKey);
@@ -82,7 +83,7 @@ const Home = () => {
         return () => {
             document.removeEventListener('keydown', handleKey);
         }
-    }, [simulator, autoTurn])
+    }, [simulator, autoTurn, autoTurnButton])
 
     return (
         <Layout>
@@ -134,6 +135,7 @@ const Home = () => {
                         </div>
                         <div className={style.auto}>
                             <button
+                                ref={autoTurnButton}
                                 onClick={() => {
                                     setAutoTurn(cur => !cur);
                                 }}
