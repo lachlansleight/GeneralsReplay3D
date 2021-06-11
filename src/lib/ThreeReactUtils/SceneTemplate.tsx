@@ -48,7 +48,6 @@ class SceneTemplate {
 
         if (!this.isSetup) {
             this.setup();
-            this.isSetup = true;
         }
     }
     public setup() {

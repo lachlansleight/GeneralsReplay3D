@@ -10,6 +10,7 @@ class Game implements TGame {
     cities: number[];
     deaths: any[];
     generals: number[];
+    swamps: number[];
     inputBuffer: any[];
     leftSockets: any[];
     map: Map;
@@ -51,6 +52,10 @@ class Game implements TGame {
         this.map.setTile(index, this.generals.length - 1);
         this.map.setArmy(index, 1);
     }
+    addSwamp(index) {
+        this.swamps.push(index);
+        this.map.setTile(index, MapTile.SWAMP);
+    }
     // Returns true when the game is over.
     update() {
         // Handle buffered attacks.
@@ -81,6 +86,11 @@ class Game implements TGame {
                     (this.cityRegen && this.map.armyAt(this.cities[i]) < Constants.MIN_CITY_ARMY)
                 ) {
                     this.map.incrementArmyAt(this.cities[i]);
+                }
+            }
+            for (let i = 0; i < this.swamps.length; i++) {
+                if (this.map.tileAt(this.swamps[i]) >= 0) {
+                    this.map.decrementArmyAt(this.swamps[i]);
                 }
             }
         }
@@ -239,6 +249,7 @@ class Game implements TGame {
 
         game.cities = [];
         game.generals = [];
+        game.swamps = [];
 
         // Init the game map from the replay.
         game.map = new Map(gameReplay.mapWidth, gameReplay.mapHeight, gameReplay.teams);
@@ -250,6 +261,9 @@ class Game implements TGame {
         }
         for (let i = 0; i < gameReplay.generals.length; i++) {
             game.addGeneral(gameReplay.generals[i]);
+        }
+        for(let i = 0; i < gameReplay.swamps.length; i++) {
+            game.addSwamp(gameReplay.swamps[i]);
         }
 
         // For replay versions < 6, city regeneration is enabled.

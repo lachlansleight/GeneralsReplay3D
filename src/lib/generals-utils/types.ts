@@ -22,10 +22,10 @@ export interface TReplay {
     version: number;
     neutrals: any[];
     neutralArmies: any[];
-    swamps: any[];
+    swamps: number[];
     chat: any[];
     playerColors: number[];
-    lights: any[];
+    lights: number[];
 }
 
 export interface TMove {
@@ -41,6 +41,7 @@ export interface TGame {
     cities: number[];
     deaths: TSocket[];
     generals: number[];
+    swamps: number[];
     inputBuffer: any[];
     leftSockets: any[];
     map: TMap;
@@ -78,4 +79,5 @@ export enum MapTile {
     MOUNTAIN = -2,
     FOG = -3,
     FOG_OBSTACLE = -4,
+    SWAMP = -10,
 }

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import TextSprite from '@seregpie/three.text-sprite';
 import Game from "./generals-utils/Game";
 import { MapTile } from "./generals-utils/types";
@@ -25,16 +26,38 @@ class BoardScene extends SceneTemplate {
     neutralMaterial: THREE.Material;
     neutralCityMaterial: THREE.Material;
     neutralMutedMaterial: THREE.Material;
-    generalGeo: THREE.TorusGeometry;
-    cityGeo: THREE.TorusGeometry;
+    generalGeo: THREE.BufferGeometry;
+    cityGeo: THREE.BufferGeometry;
+    mountainGeo: THREE.BufferGeometry;
+    swampGeo: THREE.BufferGeometry;
     armyCounts: TextSprite[];
     setTurn = -1;
+
+    private loadObj = (address: string): Promise<THREE.BufferGeometry> => {
+        return new Promise((resolve, reject) => {
+            const loader = new OBJLoader();
+            loader.load(address, obj => {
+                obj.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        resolve(child.geometry);
+                    }
+                });
+            }, null, error => {
+                reject(error);
+            })
+        });
+    }
 
     public attach = (container: HTMLElement) => {
         super.attach(container);
     };
-    public setup = () => {
+    public setup = async () => {
         if (!this.game) throw new Error("Game is not set!");
+
+        this.cityGeo = await this.loadObj("obj/city.obj");
+        this.generalGeo = await this.loadObj("obj/general.obj");
+        this.mountainGeo = await this.loadObj("obj/mountain.obj");
+        this.swampGeo = await this.loadObj("obj/swamp.obj");
 
         this.scene.background = new THREE.Color("#222");
 
@@ -65,20 +88,16 @@ class BoardScene extends SceneTemplate {
         this.neutralMaterial = new THREE.MeshPhongMaterial({ color: "#666666" });
         this.neutralCityMaterial = new THREE.MeshPhongMaterial({ color: "#111" });
         this.neutralMutedMaterial = new THREE.MeshPhongMaterial({ color: "#CCCCCC" });
+        this.neutralMutedMaterial.side = THREE.DoubleSide;
         this.neutralMaterial.side = THREE.DoubleSide;
 
-        const mountainGeo = new THREE.CylinderGeometry(0.2, 0.707, 1, 4);
         const mountainMaterial = new THREE.MeshPhongMaterial({ color: "#666666" });
 
         const groundGeo = new THREE.PlaneGeometry(0.98, 0.98);
 
-        const cityRadius = 0.5;
-
-        this.cityGeo = new THREE.TorusGeometry(cityRadius * 1.4, 0.1, 4, 4);
         const cityMaterial = new THREE.MeshPhongMaterial({ color: "#666666" });
         cityMaterial.side = THREE.DoubleSide;
 
-        this.generalGeo = new THREE.TorusGeometry(cityRadius * 1.4, 0.2, 8, 16);
         const generalMaterial = new THREE.MeshPhongMaterial({ color: "#666666" });
         generalMaterial.side = THREE.DoubleSide;
 
@@ -121,43 +140,49 @@ class BoardScene extends SceneTemplate {
                 const isCity = this.game.cities.includes(i);
                 const isGeneral = this.game.generals.includes(i);
                 const isMountain = this.game.map._map[i] === MapTile.MOUNTAIN;
+                const isSwamp = this.game.map._map[i] === MapTile.SWAMP;
 
                 const plane = new THREE.Mesh(groundGeo, this.neutralMutedMaterial);
-                plane.position.set(offsetX, 0, offsetY);
+                plane.position.set(offsetX, -0.005, offsetY);
                 plane.rotateX(Math.PI * -0.5);
                 plane.receiveShadow = true;
                 this.scene.add(plane);
                 this.tiles.push(plane);
 
                 if (isMountain) {
-                    const cone = new THREE.Mesh(mountainGeo, mountainMaterial);
-                    cone.position.set(offsetX, 0.5, offsetY);
-                    cone.rotateY(Math.PI * 0.25);
-                    cone.castShadow = true;
-                    cone.receiveShadow = true;
-                    this.scene.add(cone);
+                    const mountain = new THREE.Mesh(this.mountainGeo, mountainMaterial);
+                    mountain.position.set(offsetX, 0, offsetY);
+                    mountain.rotateY(Math.PI * 0.5 * Math.floor(Math.random() * 4));
+                    mountain.scale.setY(Math.random() * 0.5 + 0.75);
+                    mountain.castShadow = true;
+                    mountain.receiveShadow = true;
+                    this.scene.add(mountain);
+                } else if(isSwamp) {
+                    const swamp = new THREE.Mesh(this.swampGeo, mountainMaterial);
+                    swamp.position.set(offsetX, 0, offsetY);
+                    swamp.rotateY(Math.PI * 0.5 * Math.floor(Math.random() * 4));
+                    swamp.castShadow = true;
+                    swamp.receiveShadow = true;
+                    this.scene.add(swamp);
                 } else {
                     if (isCity) {
-                        const cylinder = new THREE.Mesh(this.cityGeo, this.getCityMaterial(i));
-                        cylinder.position.set(offsetX, 0.05, offsetY);
-                        cylinder.rotateX(Math.PI * 0.5);
-                        cylinder.rotateZ(Math.PI * 0.25);
-                        cylinder.castShadow = true;
-                        cylinder.receiveShadow = true;
-                        this.scene.add(cylinder);
+                        const city = new THREE.Mesh(this.cityGeo, this.getCityMaterial(i));
+                        city.position.set(offsetX, 0, offsetY);
+                        city.castShadow = true;
+                        city.receiveShadow = true;
+                        this.scene.add(city);
                         this.cities.push({
-                            mesh: cylinder,
+                            mesh: city,
                             position: i,
                         });
                     } else if (isGeneral) {
-                        const cylinder = new THREE.Mesh(this.generalGeo, this.getMaterial(i));
-                        cylinder.position.set(offsetX, 0.125, offsetY);
-                        cylinder.rotateX(Math.PI * 0.5);
-                        cylinder.castShadow = true;
-                        cylinder.receiveShadow = true;
-                        this.scene.add(cylinder);
+                        const general = new THREE.Mesh(this.generalGeo, this.getMaterial(i));
+                        general.position.set(offsetX, 0, offsetY);
+                        general.castShadow = true;
+                        general.receiveShadow = true;
+                        this.scene.add(general);
                         this.generals.push({
-                            mesh: cylinder,
+                            mesh: general,
                             position: i,
                         });
                     }
@@ -183,6 +208,10 @@ class BoardScene extends SceneTemplate {
         //light.shadow.camera.near = 0.01;
         light.shadow.camera.far = 100;
 
+        light.shadow.bias = -0.00075;
+        
+        light.shadow.radius = 0;
+
         const ambient = new THREE.AmbientLight(0xa0a0a0);
         this.scene.add(light);
         this.scene.add(ambient);
@@ -194,6 +223,8 @@ class BoardScene extends SceneTemplate {
         this.controls.autoRotateSpeed = 2;
 
         this.renderer.domElement.addEventListener("click", this.disableAutoRotate);
+
+        this.isSetup = true;
     };
 
     private disableAutoRotate = () => {
@@ -232,7 +263,6 @@ class BoardScene extends SceneTemplate {
         for (let i = 0; i < this.generals.length; i++) {
             if (!this.game.generals.includes(this.generals[i].position)) {
                 this.generals[i].mesh.geometry = this.cityGeo;
-                this.generals[i].mesh.rotateZ(Math.PI * 0.25);
                 this.cities.push(this.generals[i]);
             }
         }

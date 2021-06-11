@@ -54,6 +54,10 @@ class Map implements TMap {
     incrementArmyAt(index: number) {
         this._armies[index]++;
     }
+    decrementArmyAt(index: number) {
+        this._armies[index]--;
+        if(this._armies[index] < 0) this._armies[index] = 0;
+    }
     // Attacks from start to end. Always leaves 1 unit left at start.
     attack(start: number, end: number, is50: number, generals: number[]) {
         // Verify that the attack starts from a valid tile.
