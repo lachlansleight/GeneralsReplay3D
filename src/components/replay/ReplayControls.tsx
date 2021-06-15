@@ -9,6 +9,7 @@ import style from "./ReplayControls.module.scss";
 
 const ReplayControls = ({
     turn,
+    defaultTurn,
     maxTurn,
     gameOver,
     onNextTurn,
@@ -16,6 +17,7 @@ const ReplayControls = ({
     onSetTurn,
 }: {
     turn: number;
+    defaultTurn: number;
     maxTurn: number;
     gameOver: boolean;
     onNextTurn: () => void;
@@ -26,7 +28,7 @@ const ReplayControls = ({
     const [autoTurn, setAutoTurn] = useState(false);
     const [autoTurnSpeed, setAutoTurnSpeed] = useState(1);
     const lastTurnTime = useRef(0);
-    const [jumpTarget, setJumpTarget] = useState(0);
+    const [jumpTarget, setJumpTarget] = useState(defaultTurn);
 
     const autoTurnButton = useRef<HTMLButtonElement>(null);
     const nextTurnButton = useRef<HTMLButtonElement>(null);

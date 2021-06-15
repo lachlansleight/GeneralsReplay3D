@@ -8,7 +8,7 @@ import Simulator from "../../lib/generals-utils/simulator";
 import ReplayControls from "./ReplayControls";
 import ReplayScores from "./ReplayScores";
 
-const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn: number }) => {
+const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay, defaultTurn: number }) => {
     const [simulator, setSimulator] = useState<Simulator>();
     const [turn, setTurn] = useState(0);
 
@@ -46,6 +46,7 @@ const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn:
         <div>
             <ReplayControls
                 turn={simulator.game.turn}
+                defaultTurn={defaultTurn}
                 maxTurn={simulator.maxTurn}
                 gameOver={simulator.gameOver}
                 onNextTurn={nextTurn}
