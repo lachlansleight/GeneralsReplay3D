@@ -23,8 +23,6 @@ class Simulator implements TSimulator {
             moveIndex: this.currentMoveIndex,
             afkIndex: this.currentAfkIndex
         };
-
-        console.log(this.game.turn);
     }
 
     nextTurn() {
@@ -63,7 +61,6 @@ class Simulator implements TSimulator {
             moveIndex: this.currentMoveIndex,
             afkIndex: this.currentAfkIndex
         };
-        console.log(this.gameStates);
     }
 
     previousTurn() {

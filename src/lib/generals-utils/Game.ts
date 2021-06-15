@@ -22,8 +22,6 @@ class Game implements TGame {
 
     constructor(game?: TGame, sockets?: TSocket[], teams?: any) {
         if(game) {
-            console.log(game);
-
             this.alivePlayers = game.alivePlayers;
             this.cities = game.cities ? JSON.parse(JSON.stringify(game.cities)) : game.cities;
             this.deaths = game.deaths ? JSON.parse(JSON.stringify(game.deaths)) : game.deaths;

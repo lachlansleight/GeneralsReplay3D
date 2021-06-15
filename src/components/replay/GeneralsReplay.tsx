@@ -33,7 +33,6 @@ const GeneralsReplay = ({ replay }: { replay: TReplay }) => {
 
     const previousTurn = () => {
         simulator.previousTurn();
-        console.log(simulator.game.turn);
         setTurn(simulator.game.turn);
     };
 
