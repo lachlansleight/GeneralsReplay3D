@@ -8,13 +8,15 @@ const ReplayScores = ({
     scores,
     sockets,
     colors,
+    showing,
 }: {
     scores: TScore[];
     sockets: TSocket[];
     colors: number[];
+    showing: boolean;
 }) => {
     return (
-        <div className={style.scores}>
+        <div className={`${style.scores} ${showing ? null : style.hiding}`}>
             <div>
                 <span className={style.stars} role="img" aria-label="star">
                     ⭐

@@ -29,7 +29,7 @@ class Simulator implements TSimulator {
     }
 
     nextTurn() {
-        if(this.gameOver) return;
+        if (this.gameOver) return;
 
         while (
             this.replay.moves.length > this.currentMoveIndex &&

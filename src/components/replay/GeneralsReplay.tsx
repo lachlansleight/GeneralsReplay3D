@@ -8,9 +8,12 @@ import Simulator from "../../lib/generals-utils/simulator";
 import ReplayControls from "./ReplayControls";
 import ReplayScores from "./ReplayScores";
 
-const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay, defaultTurn: number }) => {
+import style from "./GeneralsReplay.module.scss";
+
+const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn: number }) => {
     const [simulator, setSimulator] = useState<Simulator>();
     const [turn, setTurn] = useState(0);
+    const [showUi, setShowUi] = useState(true);
 
     useEffect(() => {
         const sim = new Simulator(replay);
@@ -44,11 +47,22 @@ const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay, defaultTurn:
 
     return (
         <div>
+            <div className={style.resetContainer}>
+                <button
+                    onClick={() => {
+                        console.log(showUi);
+                        setShowUi(cur => !cur);
+                    }}
+                >
+                    {showUi ? ">" : "<"}
+                </button>
+            </div>
             <ReplayControls
                 turn={simulator.game.turn}
                 defaultTurn={defaultTurn}
                 maxTurn={simulator.maxTurn}
                 gameOver={simulator.gameOver}
+                showing={showUi}
                 onNextTurn={nextTurn}
                 onPreviousTurn={previousTurn}
                 onSetTurn={jumpToTurn}
@@ -57,6 +71,7 @@ const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay, defaultTurn:
                 scores={simulator.game.scores}
                 sockets={simulator.game.sockets}
                 colors={replay.playerColors}
+                showing={showUi}
             />
             <Board3D
                 game={simulator.game}

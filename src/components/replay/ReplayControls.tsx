@@ -12,6 +12,7 @@ const ReplayControls = ({
     defaultTurn,
     maxTurn,
     gameOver,
+    showing,
     onNextTurn,
     onPreviousTurn,
     onSetTurn,
@@ -20,6 +21,7 @@ const ReplayControls = ({
     defaultTurn: number;
     maxTurn: number;
     gameOver: boolean;
+    showing: boolean;
     onNextTurn: () => void;
     onPreviousTurn: () => void;
     onSetTurn: (turn: number) => void;
@@ -104,7 +106,7 @@ const ReplayControls = ({
     };
 
     return (
-        <div className={style.turnControls}>
+        <div className={`${style.turnControls} ${showing ? null : style.hiding}`}>
             <div className={style.turn}>
                 {turn > 0 ? (
                     <p className={getIsHalfTurn(turn) ? style.point : null}>

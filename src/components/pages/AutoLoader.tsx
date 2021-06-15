@@ -19,7 +19,7 @@ const Home = () => {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         let turn = Number(params.get("t") || 0) * 2;
-        if(turn > 0) turn -= 2;
+        if (turn > 0) turn -= 2;
         setDefaultTurn(turn);
     }, [location]);
 

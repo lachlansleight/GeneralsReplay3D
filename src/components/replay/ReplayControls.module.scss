@@ -1,6 +1,6 @@
 .turnControls {
     position: absolute;
-    right: 0;
+    right: 2.5rem;
     top: 72px;
     height: 80px;
     display: flex;
@@ -8,6 +8,7 @@
     z-index: 100;
     padding: 0 1rem;
     gap: 1rem;
+    transition: all 0.5s;
 
     .turn {
         display: grid;
@@ -105,4 +106,8 @@
             width: 180px;
         }
     }
+}
+
+.hiding {
+    right: -740px !important;
 }
