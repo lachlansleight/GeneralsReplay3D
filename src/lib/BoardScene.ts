@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
-import TextSprite from '@seregpie/three.text-sprite';
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import TextSprite from "@seregpie/three.text-sprite";
 import Game from "./generals-utils/Game";
 import { MapTile } from "./generals-utils/types";
 import SceneTemplate from "./ThreeReactUtils/SceneTemplate";
@@ -36,17 +36,22 @@ class BoardScene extends SceneTemplate {
     private loadObj = (address: string): Promise<THREE.BufferGeometry> => {
         return new Promise((resolve, reject) => {
             const loader = new OBJLoader();
-            loader.load(address, obj => {
-                obj.traverse(function (child) {
-                    if (child instanceof THREE.Mesh) {
-                        resolve(child.geometry);
-                    }
-                });
-            }, null, error => {
-                reject(error);
-            })
+            loader.load(
+                address,
+                obj => {
+                    obj.traverse(function (child) {
+                        if (child instanceof THREE.Mesh) {
+                            resolve(child.geometry);
+                        }
+                    });
+                },
+                null,
+                error => {
+                    reject(error);
+                }
+            );
         });
-    }
+    };
 
     public attach = (container: HTMLElement) => {
         super.attach(container);
@@ -79,7 +84,9 @@ class BoardScene extends SceneTemplate {
             );
             this.playerMaterials.slice(-1)[0].side = THREE.DoubleSide;
             this.playerMutedMaterials.push(
-                new THREE.MeshPhongMaterial({ color: `hsl(${hue}, ${Math.round(sat * 0.5)}%, ${moreBri}%)` })
+                new THREE.MeshPhongMaterial({
+                    color: `hsl(${hue}, ${Math.round(sat * 0.5)}%, ${moreBri}%)`,
+                })
             );
         }
 
@@ -119,7 +126,7 @@ class BoardScene extends SceneTemplate {
                     color: "#FFF",
                     fontFamily: "sans-serif",
                     fontSize: 0.3,
-                    text: "0"
+                    text: "0",
                 });
                 textSprite.position.set(offsetX, 0.25, offsetY);
                 this.armyCounts.push(textSprite);
@@ -157,7 +164,7 @@ class BoardScene extends SceneTemplate {
                     mountain.castShadow = true;
                     mountain.receiveShadow = true;
                     this.scene.add(mountain);
-                } else if(isSwamp) {
+                } else if (isSwamp) {
                     const swamp = new THREE.Mesh(this.swampGeo, mountainMaterial);
                     swamp.position.set(offsetX, 0, offsetY);
                     swamp.rotateY(Math.PI * 0.5 * Math.floor(Math.random() * 4));
@@ -209,7 +216,7 @@ class BoardScene extends SceneTemplate {
         light.shadow.camera.far = 100;
 
         light.shadow.bias = -0.00075;
-        
+
         light.shadow.radius = 0;
 
         const ambient = new THREE.AmbientLight(0xa0a0a0);
@@ -229,7 +236,7 @@ class BoardScene extends SceneTemplate {
 
     private disableAutoRotate = () => {
         this.controls.autoRotate = false;
-    }
+    };
 
     private getMaterial = (mapIndex: number) => {
         return this.game.map._map[mapIndex] < 0
@@ -258,7 +265,7 @@ class BoardScene extends SceneTemplate {
 
         if (this.setTurn === this.game.turn) return;
         this.setTurn = this.game.turn;
-        //console.log(this.game);
+        console.log(this.game);
 
         for (let i = 0; i < this.generals.length; i++) {
             if (!this.game.generals.includes(this.generals[i].position)) {
@@ -313,17 +320,19 @@ class BoardScene extends SceneTemplate {
                     }
 
                     //dynamic threshold to render text
-                    if(armySize > 20 || isCity || isGeneral) {
+                    if (armySize > 20 || isCity || isGeneral) {
                         this.armyCounts[i].visible = true;
                         this.armyCounts[i].fontSize = 0.25 + 0.5 * Math.min(1, armySize / 100);
                         this.armyCounts[i].text = String(armySize);
                         this.armyCounts[i].position.setY(textHeight);
-                    } else if(this.armyCounts[i].visible && armySize < 20 && !(isCity || isGeneral)) {
+                    } else if (
+                        this.armyCounts[i].visible &&
+                        armySize < 20 &&
+                        !(isCity || isGeneral)
+                    ) {
                         this.armyCounts[i].visible = false;
                     }
                 }
-
-                
             }
         }
     };

@@ -1,0 +1,79 @@
+.turnControls {
+    position: absolute;
+    right: 0;
+    top: 72px;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    padding: 0 1rem;
+
+    .turn {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+        margin-right: 1rem;
+        width: 150px;
+
+        p {
+            text-align: center;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        p.point {
+            text-decoration: underline;
+        }
+
+        > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: var(--color-theme-500);
+            color: #fff;
+            font-size: 1.2rem;
+            border: 0;
+            padding: 0.2rem 1rem;
+        }
+    }
+
+    .auto {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+
+        > div {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+
+            button {
+                cursor: pointer;
+                background-color: #fff;
+                color: #000;
+                font-size: 1.2rem;
+                border: 0;
+                padding: 0.2rem 1rem;
+            }
+
+            button.active {
+                background-color: var(--color-theme-500);
+                color: #fff;
+            }
+        }
+
+        > button {
+            cursor: pointer;
+            background-color: var(--color-theme-500);
+            color: #fff;
+            font-size: 1.2rem;
+            border: 0;
+            padding: 0.2rem 1rem;
+            width: 330px;
+        }
+    }
+}

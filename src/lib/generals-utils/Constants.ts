@@ -15,13 +15,13 @@ const Constants = {
         [32, 62, 37],
         [240, 100, 50],
         [248, 39, 39],
-    ]
+    ],
 };
 
 export const GetBackgroundColor = (index: number) => {
     const col = Constants.colors[index];
-    if(!col) return "#ffffff";
+    if (!col) return "#ffffff";
     return `hsl(${col[0]}, ${col[1]}%, ${col[2]}%)`;
-}
+};
 
 export default Constants;

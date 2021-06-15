@@ -20,7 +20,25 @@ class Game implements TGame {
     turn: number;
     cityRegen?: boolean;
 
-    constructor(sockets: TSocket[], teams: any) {
+    constructor(game?: TGame, sockets?: TSocket[], teams?: any) {
+        if(game) {
+            console.log(game);
+
+            this.alivePlayers = game.alivePlayers;
+            this.cities = game.cities ? JSON.parse(JSON.stringify(game.cities)) : game.cities;
+            this.deaths = game.deaths ? JSON.parse(JSON.stringify(game.deaths)) : game.deaths;
+            this.generals = game.generals ? JSON.parse(JSON.stringify(game.generals)) : game.generals;
+            this.swamps = game.swamps ? JSON.parse(JSON.stringify(game.swamps)) : game.swamps;
+            this.inputBuffer = game.inputBuffer ? JSON.parse(JSON.stringify(game.inputBuffer)) : game.inputBuffer;
+            this.leftSockets = game.leftSockets ? JSON.parse(JSON.stringify(game.leftSockets)) : game.leftSockets;
+            this.map = new Map(game.map);
+            this.scores = game.scores ? JSON.parse(JSON.stringify(game.scores)) : game.scores;
+            this.sockets = game.sockets;
+            this.teams = game.teams ? JSON.parse(JSON.stringify(game.teams)) : game.teams;
+            this.turn = game.turn;
+            this.cityRegen = game.cityRegen;
+            return;
+        }
         if (!sockets) return;
         this.sockets = sockets;
         this.teams = teams;
@@ -245,14 +263,14 @@ class Game implements TGame {
                 stars: gameReplay.stars ? gameReplay.stars[i] || 0 : "",
             };
         });
-        const game = new Game(sockets, gameReplay.teams);
+        const game = new Game(null, sockets, gameReplay.teams);
 
         game.cities = [];
         game.generals = [];
         game.swamps = [];
 
         // Init the game map from the replay.
-        game.map = new Map(gameReplay.mapWidth, gameReplay.mapHeight, gameReplay.teams);
+        game.map = new Map(null, gameReplay.mapWidth, gameReplay.mapHeight, gameReplay.teams);
         for (let i = 0; i < gameReplay.mountains.length; i++) {
             game.addMountain(gameReplay.mountains[i]);
         }
@@ -262,7 +280,7 @@ class Game implements TGame {
         for (let i = 0; i < gameReplay.generals.length; i++) {
             game.addGeneral(gameReplay.generals[i]);
         }
-        for(let i = 0; i < gameReplay.swamps.length; i++) {
+        for (let i = 0; i < gameReplay.swamps.length; i++) {
             game.addSwamp(gameReplay.swamps[i]);
         }
 

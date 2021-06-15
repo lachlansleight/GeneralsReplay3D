@@ -8,12 +8,23 @@ class Simulator implements TSimulator {
     game: Game;
     currentMoveIndex = 0;
     currentAfkIndex = 0;
+    gameOver = false;
+
+    gameStates: {game: Game, moveIndex: number, afkIndex: number}[] = [];
 
     constructor(replay) {
         this.replay = replay;
         this.game = Game.createFromReplay(replay);
         this.currentMoveIndex = 0;
         this.currentAfkIndex = 0;
+
+        this.gameStates[this.game.turn] = {
+            game: new Game(this.game),
+            moveIndex: this.currentMoveIndex,
+            afkIndex: this.currentAfkIndex
+        };
+
+        console.log(this.game.turn);
     }
 
     nextTurn() {
@@ -44,6 +55,26 @@ class Simulator implements TSimulator {
         }
 
         this.game.update();
+
+        this.gameOver = this.game.isOver();
+
+        this.gameStates[this.game.turn] = {
+            game: new Game(this.game),
+            moveIndex: this.currentMoveIndex,
+            afkIndex: this.currentAfkIndex
+        };
+        console.log(this.gameStates);
+    }
+
+    previousTurn() {
+        const newTurn = this.game.turn - 1;
+        if(newTurn < 0) return;
+
+        this.game = new Game(this.gameStates[newTurn].game);
+        this.currentMoveIndex = this.gameStates[newTurn].moveIndex;
+        this.currentAfkIndex = this.gameStates[newTurn].afkIndex;
+        
+        this.gameOver = this.game.isOver();
     }
 
     runFullSimulation() {

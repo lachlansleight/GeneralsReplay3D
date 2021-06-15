@@ -1,0 +1,23 @@
+.resetContainer {
+    position: absolute;
+    top: 72px;
+    left: 0;
+    width: 100vw;
+    display: grid;
+    place-items: center;
+    z-index: 100;
+
+    > div {
+        display: flex;
+        gap: 1rem;
+    }
+
+    button {
+        cursor: pointer;
+        background-color: var(--color-theme-500);
+        color: #fff;
+        font-size: 1.2rem;
+        border: 0;
+        padding: 0.2rem 1rem;
+    }
+}

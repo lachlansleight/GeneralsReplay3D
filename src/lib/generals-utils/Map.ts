@@ -8,7 +8,15 @@ class Map implements TMap {
     _map: MapTile[];
     teams: any;
 
-    constructor(width: number, height: number, teams: any) {
+    constructor(map?: TMap, width?: number, height?: number, teams?: any) {
+        if(map) {
+            this.height = map.height;
+            this.width = map.width;
+            this._armies = map._armies ? JSON.parse(JSON.stringify(map._armies)) : map._armies;
+            this._map = map._map ? JSON.parse(JSON.stringify(map._map)) : map._map;
+            this.teams = map.teams ? JSON.parse(JSON.stringify(map.teams)) : map.teams;
+            return;
+        }
         this.width = width;
         this.height = height;
         if (teams) this.teams = teams;
@@ -56,7 +64,7 @@ class Map implements TMap {
     }
     decrementArmyAt(index: number) {
         this._armies[index]--;
-        if(this._armies[index] < 0) this._armies[index] = 0;
+        if (this._armies[index] < 0) this._armies[index] = 0;
     }
     // Attacks from start to end. Always leaves 1 unit left at start.
     attack(start: number, end: number, is50: number, generals: number[]) {

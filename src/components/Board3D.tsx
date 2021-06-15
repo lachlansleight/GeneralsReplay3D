@@ -3,7 +3,7 @@ import BoardScene from "../lib/BoardScene";
 import Game from "../lib/generals-utils/Game";
 import ThreeScene from "../lib/ThreeReactUtils/ThreeScene";
 
-const Board3D = ({ game, colors, turn }: { game: Game; colors: number[][], turn: number }) => {
+const Board3D = ({ game, colors, turn }: { game: Game; colors: number[][]; turn: number }) => {
     const [scene, setScene] = useState<BoardScene>();
     const [initialized, setInitialized] = useState(false);
 

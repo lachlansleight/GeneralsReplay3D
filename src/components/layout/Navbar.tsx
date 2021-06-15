@@ -16,7 +16,13 @@ const Navbar = () => {
                 </div>
                 <ul>
                     <li>
-                        <a href="https://github.com/lachlansleight/GeneralsReplay3D" target="_blank" rel="noopener noreferrer">Explore on GitHub</a>
+                        <a
+                            href="https://github.com/lachlansleight/GeneralsReplay3D"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Explore on GitHub
+                        </a>
                     </li>
                 </ul>
             </div>
