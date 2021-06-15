@@ -1,0 +1,19 @@
+.balanceGraph {
+    position: absolute;
+    width: 100vw;
+    height: 80px;
+    left: 0px;
+    bottom: 0px;
+    z-index: 150;
+    transition: all 0.5s;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+}
+
+.hiding {
+    bottom: -80px;
+}

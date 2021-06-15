@@ -9,6 +9,7 @@ import ReplayControls from "./ReplayControls";
 import ReplayScores from "./ReplayScores";
 
 import style from "./GeneralsReplay.module.scss";
+import BalanceGraph from "./BalanceGraph";
 
 const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn: number }) => {
     const [simulator, setSimulator] = useState<Simulator>();
@@ -57,6 +58,15 @@ const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn:
                     {showUi ? ">" : "<"}
                 </button>
             </div>
+            <BalanceGraph
+                showing={showUi}
+                turn={simulator.game.turn}
+                width={window.innerWidth}
+                height={160}
+                colors={replay.playerColors}
+                games={simulator.gameStates.map(state => state.game)}
+                onClick={jumpToTurn}
+            />
             <ReplayControls
                 turn={simulator.game.turn}
                 defaultTurn={defaultTurn}
