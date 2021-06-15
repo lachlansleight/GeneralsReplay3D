@@ -29,6 +29,8 @@ class Simulator implements TSimulator {
     }
 
     nextTurn() {
+        if(this.gameOver) return;
+
         while (
             this.replay.moves.length > this.currentMoveIndex &&
             this.replay.moves[this.currentMoveIndex].turn <= this.game.turn
