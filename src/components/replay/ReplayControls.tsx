@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { Range } from "react-range";
+import useActiveElement from "../../lib/useActiveElement";
 
 import useAnim from "../../lib/useAnim";
 
@@ -21,11 +22,15 @@ const ReplayControls = ({
     onPreviousTurn: () => void;
     onSetTurn: (turn: number) => void;
 }) => {
+    const activeElement = useActiveElement();
     const [autoTurn, setAutoTurn] = useState(false);
     const [autoTurnSpeed, setAutoTurnSpeed] = useState(1);
-    const autoTurnButton = useRef<HTMLButtonElement>(null);
     const lastTurnTime = useRef(0);
     const [jumpTarget, setJumpTarget] = useState(0);
+
+    const autoTurnButton = useRef<HTMLButtonElement>(null);
+    const nextTurnButton = useRef<HTMLButtonElement>(null);
+    const previousTurnButton = useRef<HTMLButtonElement>(null);
 
     const animCallback = (time: number) => {
         if (!autoTurn) return;
@@ -39,21 +44,40 @@ const ReplayControls = ({
     useAnim(animCallback, [autoTurn, autoTurnSpeed, turn, gameOver, onNextTurn]);
 
     useEffect(() => {
-        const handleKey = (key: any) => {
-            if (key.key === "ArrowRight" && !autoTurn && !gameOver) {
-                if (onNextTurn) onNextTurn();
-            } else if (key.key === "ArrowLeft" && !autoTurn) {
-                if (onPreviousTurn) onPreviousTurn();
-            } else if (key.key === " ") {
+        const handleKey = (e: KeyboardEvent) => {
+            if (activeElement) return;
+            e.preventDefault();
+            if (e.key === "ArrowRight" && !autoTurn && !gameOver) {
+                nextTurnButton.current.click();
+            } else if (e.key === "ArrowLeft" && !autoTurn) {
+                previousTurnButton.current.click();
+            } else if (e.key === " ") {
                 autoTurnButton.current.click();
             }
         };
+
+        const supressKeyUp = (e: KeyboardEvent) => {
+            if (activeElement) return;
+            e.preventDefault();
+        };
+
         document.addEventListener("keydown", handleKey);
+        window.addEventListener("keyup", supressKeyUp);
 
         return () => {
             document.removeEventListener("keydown", handleKey);
+            window.removeEventListener("keyup", supressKeyUp);
         };
-    }, [autoTurn, autoTurnButton, onNextTurn, onPreviousTurn, gameOver]);
+    }, [
+        autoTurn,
+        autoTurnButton,
+        nextTurnButton,
+        previousTurnButton,
+        onNextTurn,
+        onPreviousTurn,
+        gameOver,
+        activeElement,
+    ]);
 
     const startAutoTurn = (speed: number) => {
         setAutoTurn(true);
@@ -72,6 +96,11 @@ const ReplayControls = ({
         return turn % 2 === 1;
     };
 
+    const jumpToTurnAndPause = () => {
+        setAutoTurn(false);
+        onSetTurn(jumpTarget);
+    };
+
     return (
         <div className={style.turnControls}>
             <div className={style.turn}>
@@ -83,8 +112,12 @@ const ReplayControls = ({
                     <p>Turn 1</p>
                 )}
                 <div>
-                    <button onClick={() => onPreviousTurn()}>Last</button>
-                    <button onClick={() => onNextTurn()}>Next</button>
+                    <button ref={previousTurnButton} onClick={() => onPreviousTurn()}>
+                        Last
+                    </button>
+                    <button ref={nextTurnButton} onClick={() => onNextTurn()}>
+                        Next
+                    </button>
                 </div>
             </div>
             <div className={style.auto}>
@@ -129,7 +162,7 @@ const ReplayControls = ({
                         <div {...props} style={{ ...props.style }} className={style.sliderThumb} />
                     )}
                 />
-                <button onClick={() => onSetTurn(jumpTarget)}>
+                <button onClick={jumpToTurnAndPause}>
                     Jump to turn {getFullTurnNumber(jumpTarget)}
                 </button>
             </div>

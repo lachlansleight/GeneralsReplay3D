@@ -82,6 +82,7 @@ class Simulator implements TSimulator {
         this.game = new Game(this.gameStates[turn].game);
         this.currentMoveIndex = this.gameStates[turn].moveIndex;
         this.currentAfkIndex = this.gameStates[turn].afkIndex;
+        this.gameOver = this.game.isOver();
     }
 
     runFullSimulation() {
