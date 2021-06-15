@@ -48,7 +48,7 @@ const Home = () => {
     return (
         <Layout>
             {replay ? (
-                <GeneralsReplay replay={replay} />
+                <GeneralsReplay replay={replay} defaultTurn={0} />
             ) : loading ? (
                 <div className={style.idForm}>
                     <p>Loading...</p>

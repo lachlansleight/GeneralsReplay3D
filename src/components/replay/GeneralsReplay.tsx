@@ -8,14 +8,15 @@ import Simulator from "../../lib/generals-utils/simulator";
 import ReplayControls from "./ReplayControls";
 import ReplayScores from "./ReplayScores";
 
-const GeneralsReplay = ({ replay }: { replay: TReplay }) => {
+const GeneralsReplay = ({ replay, defaultTurn }: { replay: TReplay; defaultTurn: number }) => {
     const [simulator, setSimulator] = useState<Simulator>();
     const [turn, setTurn] = useState(0);
 
     useEffect(() => {
         const sim = new Simulator(replay);
+        sim.setTurn(defaultTurn);
         setSimulator(sim);
-    }, [replay]);
+    }, [replay, defaultTurn]);
 
     if (!simulator) {
         return (

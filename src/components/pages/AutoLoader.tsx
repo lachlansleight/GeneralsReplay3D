@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import Convert from "../../lib/generals-utils/converter";
 import { TReplay } from "../../lib/generals-utils/types";
@@ -13,6 +13,14 @@ const Home = () => {
     const { replayId } = useParams<{ replayId: string }>();
     const [error, setError] = useState("");
     const [replay, setReplay] = useState<TReplay>();
+    const [defaultTurn, setDefaultTurn] = useState(0);
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const turn = Number(params.get("t") || 0);
+        setDefaultTurn(turn);
+    }, [location]);
 
     useEffect(() => {
         const doLoad = async (id: string) => {
@@ -61,7 +69,7 @@ const Home = () => {
     return (
         <Layout>
             {replay ? (
-                <GeneralsReplay replay={replay} />
+                <GeneralsReplay replay={replay} defaultTurn={defaultTurn} />
             ) : (
                 <div className={style.idForm}>
                     <p>Loading...</p>
