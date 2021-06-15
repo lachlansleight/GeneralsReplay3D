@@ -21,14 +21,20 @@ class Game implements TGame {
     cityRegen?: boolean;
 
     constructor(game?: TGame, sockets?: TSocket[], teams?: any) {
-        if(game) {
+        if (game) {
             this.alivePlayers = game.alivePlayers;
             this.cities = game.cities ? JSON.parse(JSON.stringify(game.cities)) : game.cities;
             this.deaths = game.deaths ? JSON.parse(JSON.stringify(game.deaths)) : game.deaths;
-            this.generals = game.generals ? JSON.parse(JSON.stringify(game.generals)) : game.generals;
+            this.generals = game.generals
+                ? JSON.parse(JSON.stringify(game.generals))
+                : game.generals;
             this.swamps = game.swamps ? JSON.parse(JSON.stringify(game.swamps)) : game.swamps;
-            this.inputBuffer = game.inputBuffer ? JSON.parse(JSON.stringify(game.inputBuffer)) : game.inputBuffer;
-            this.leftSockets = game.leftSockets ? JSON.parse(JSON.stringify(game.leftSockets)) : game.leftSockets;
+            this.inputBuffer = game.inputBuffer
+                ? JSON.parse(JSON.stringify(game.inputBuffer))
+                : game.inputBuffer;
+            this.leftSockets = game.leftSockets
+                ? JSON.parse(JSON.stringify(game.leftSockets))
+                : game.leftSockets;
             this.map = new Map(game.map);
             this.scores = game.scores ? JSON.parse(JSON.stringify(game.scores)) : game.scores;
             this.sockets = game.sockets;

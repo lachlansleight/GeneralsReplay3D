@@ -26,7 +26,7 @@ const GeneralsReplay = ({ replay }: { replay: TReplay }) => {
     }
 
     const nextTurn = () => {
-        if(simulator.gameOver) return;
+        if (simulator.gameOver) return;
         simulator.nextTurn();
         setTurn(simulator.game.turn);
     };

@@ -9,7 +9,7 @@ class Map implements TMap {
     teams: any;
 
     constructor(map?: TMap, width?: number, height?: number, teams?: any) {
-        if(map) {
+        if (map) {
             this.height = map.height;
             this.width = map.width;
             this._armies = map._armies ? JSON.parse(JSON.stringify(map._armies)) : map._armies;

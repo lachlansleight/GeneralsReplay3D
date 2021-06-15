@@ -29,10 +29,10 @@ class BoardScene extends SceneTemplate {
 
     setTurn = -1;
 
-
     private loadObj = (address: string): Promise<THREE.BufferGeometry> => {
         return new Promise((resolve, reject) => {
             const loader = new OBJLoader();
+            console.log(address);
             loader.load(
                 address,
                 obj => {
@@ -56,10 +56,15 @@ class BoardScene extends SceneTemplate {
     public setup = async () => {
         if (!this.game) throw new Error("Game is not set!");
 
-        const cityGeo = await this.loadObj("obj/city.obj");
-        const generalGeo = await this.loadObj("obj/general.obj");
-        const mountainGeo = await this.loadObj("obj/mountain.obj");
-        const swampGeo = await this.loadObj("obj/swamp.obj");
+        console.log("1");
+        const cityGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/city.obj`);
+        console.log("2");
+        const generalGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/general.obj`);
+        console.log("3");
+        const mountainGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/mountain.obj`);
+        console.log("4");
+        const swampGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/swamp.obj`);
+        console.log("5");
 
         this.scene.background = new THREE.Color("#222");
 
@@ -282,9 +287,9 @@ class BoardScene extends SceneTemplate {
                 //update city or general
                 const isCity = this.game.cities.includes(i);
                 const isGeneral = this.game.generals.includes(i);
-                if(isCity || isGeneral) {
+                if (isCity || isGeneral) {
                     const material = this.getCityMaterial(i);
-                    if(isCity) {
+                    if (isCity) {
                         this.cities[i].visible = true;
                         this.generals[i].visible = false;
                         this.cities[i].material = material;
