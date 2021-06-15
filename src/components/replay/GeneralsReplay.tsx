@@ -36,37 +36,20 @@ const GeneralsReplay = ({ replay }: { replay: TReplay }) => {
         setTurn(simulator.game.turn);
     };
 
+    const jumpToTurn = (newTurn: number) => {
+        simulator.setTurn(newTurn);
+        setTurn(simulator.game.turn);
+    };
+
     return (
         <div>
-            {/* <div className={style.resetContainer}>
-                <div>
-                    <button
-                        onClick={() => {
-                            setSimulator(new Simulator(replay));
-                            setAutoTurn(false);
-                            setAutoTurnSpeed(1);
-                            setTurn(0);
-                        }}
-                    >
-                        Reset
-                    </button>
-                    <button
-                        onClick={() => {
-                            setSimulator(null);
-                            setAutoTurn(false);
-                            setAutoTurnSpeed(1);
-                            setTurn(0);
-                        }}
-                    >
-                        Exit
-                    </button>
-                </div>
-            </div> */}
             <ReplayControls
                 turn={simulator.game.turn}
+                maxTurn={simulator.maxTurn}
                 gameOver={simulator.gameOver}
                 onNextTurn={nextTurn}
                 onPreviousTurn={previousTurn}
+                onSetTurn={jumpToTurn}
             />
             <ReplayScores
                 scores={simulator.game.scores}

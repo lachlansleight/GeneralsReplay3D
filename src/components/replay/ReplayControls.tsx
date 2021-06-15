@@ -1,24 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { Range } from "react-range";
+
 import useAnim from "../../lib/useAnim";
 
 import style from "./ReplayControls.module.scss";
 
 const ReplayControls = ({
     turn,
+    maxTurn,
     gameOver,
     onNextTurn,
     onPreviousTurn,
+    onSetTurn,
 }: {
     turn: number;
+    maxTurn: number;
     gameOver: boolean;
     onNextTurn: () => void;
     onPreviousTurn: () => void;
+    onSetTurn: (turn: number) => void;
 }) => {
     const [autoTurn, setAutoTurn] = useState(false);
     const [autoTurnSpeed, setAutoTurnSpeed] = useState(1);
     const autoTurnButton = useRef<HTMLButtonElement>(null);
     const lastTurnTime = useRef(0);
+    const [jumpTarget, setJumpTarget] = useState(0);
 
     const animCallback = (time: number) => {
         if (!autoTurn) return;
@@ -57,12 +64,20 @@ const ReplayControls = ({
         return autoTurnSpeed === speed ? style.active : null;
     };
 
+    const getFullTurnNumber = (turn: number) => {
+        return Math.round((turn + 1) / 2);
+    };
+
+    const getIsHalfTurn = (turn: number) => {
+        return turn % 2 === 1;
+    };
+
     return (
         <div className={style.turnControls}>
             <div className={style.turn}>
                 {turn > 0 ? (
-                    <p className={turn % 2 === 1 ? style.point : null}>
-                        Turn {Math.round((turn + 1) / 2)}
+                    <p className={getIsHalfTurn(turn) ? style.point : null}>
+                        Turn {getFullTurnNumber(turn)}
                     </p>
                 ) : (
                     <p>Turn 1</p>
@@ -97,6 +112,26 @@ const ReplayControls = ({
                 ) : (
                     <div></div>
                 )}
+            </div>
+            <div className={style.jump}>
+                <Range
+                    min={0}
+                    max={maxTurn}
+                    step={2}
+                    values={[jumpTarget]}
+                    onChange={(values: number[]) => setJumpTarget(values[0])}
+                    renderTrack={({ props, children }) => (
+                        <div {...props} style={{ ...props.style }} className={style.sliderTrack}>
+                            {children}
+                        </div>
+                    )}
+                    renderThumb={({ props }) => (
+                        <div {...props} style={{ ...props.style }} className={style.sliderThumb} />
+                    )}
+                />
+                <button onClick={() => onSetTurn(jumpTarget)}>
+                    Jump to turn {getFullTurnNumber(jumpTarget)}
+                </button>
             </div>
         </div>
     );

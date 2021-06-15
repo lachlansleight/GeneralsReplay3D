@@ -32,7 +32,6 @@ class BoardScene extends SceneTemplate {
     private loadObj = (address: string): Promise<THREE.BufferGeometry> => {
         return new Promise((resolve, reject) => {
             const loader = new OBJLoader();
-            console.log(address);
             loader.load(
                 address,
                 obj => {
@@ -56,15 +55,10 @@ class BoardScene extends SceneTemplate {
     public setup = async () => {
         if (!this.game) throw new Error("Game is not set!");
 
-        console.log("1");
         const cityGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/city.obj`);
-        console.log("2");
         const generalGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/general.obj`);
-        console.log("3");
         const mountainGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/mountain.obj`);
-        console.log("4");
         const swampGeo = await this.loadObj(`${process.env.PUBLIC_URL}/obj/swamp.obj`);
-        console.log("5");
 
         this.scene.background = new THREE.Color("#222");
 

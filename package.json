@@ -19,6 +19,7 @@
         "react": "*",
         "react-dom": "*",
         "react-markdown": "*",
+        "react-range": "^1.8.9",
         "react-router-dom": "*",
         "react-scripts": "*",
         "react-spinners": "*",

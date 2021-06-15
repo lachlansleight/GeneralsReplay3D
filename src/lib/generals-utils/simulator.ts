@@ -9,10 +9,11 @@ class Simulator implements TSimulator {
     currentMoveIndex = 0;
     currentAfkIndex = 0;
     gameOver = false;
+    maxTurn = 0;
 
     gameStates: { game: Game; moveIndex: number; afkIndex: number }[] = [];
 
-    constructor(replay) {
+    constructor(replay: TReplay) {
         this.replay = replay;
         this.game = Game.createFromReplay(replay);
         this.currentMoveIndex = 0;
@@ -23,6 +24,8 @@ class Simulator implements TSimulator {
             moveIndex: this.currentMoveIndex,
             afkIndex: this.currentAfkIndex,
         };
+
+        this.runFullSimulation();
     }
 
     nextTurn() {
@@ -74,20 +77,16 @@ class Simulator implements TSimulator {
         this.gameOver = this.game.isOver();
     }
 
+    setTurn(turn: number) {
+        turn = Math.max(0, Math.min(turn, this.maxTurn));
+        this.game = new Game(this.gameStates[turn].game);
+        this.currentMoveIndex = this.gameStates[turn].moveIndex;
+        this.currentAfkIndex = this.gameStates[turn].afkIndex;
+    }
+
     runFullSimulation() {
         while (!this.game.isOver() && this.game.turn < 2000) {
             this.nextTurn();
-            console.log(
-                "Simulated turn " +
-                    this.game.turn +
-                    ". " +
-                    this.game.alivePlayers +
-                    " players left alive. " +
-                    "Leader has " +
-                    this.game.scores[0].total +
-                    " army."
-            );
-
             // Do whatever you want with the current game state. Some useful fields are:
             // game.turn: The current turn.
             // game.sockets: The array of players. Player game.sockets[i] has playerIndex i.
@@ -96,6 +95,8 @@ class Simulator implements TSimulator {
             // game.alivePlayers: The number of players left alive.
             // game.deaths: Dead players in chronological order: game.deaths[0] is the first player to die.
         }
+        this.maxTurn = this.game.turn;
+        this.setTurn(0);
     }
 }
 

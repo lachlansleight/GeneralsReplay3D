@@ -7,6 +7,7 @@
     justify-content: space-between;
     z-index: 100;
     padding: 0 1rem;
+    gap: 1rem;
 
     .turn {
         display: grid;
@@ -74,6 +75,34 @@
             border: 0;
             padding: 0.2rem 1rem;
             width: 330px;
+        }
+    }
+
+    .jump {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+
+        .sliderTrack {
+            height: 5px;
+            background-color: #fff;
+        }
+
+        .sliderThumb {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            background-color: var(--color-theme-500);
+        }
+
+        button {
+            cursor: pointer;
+            background-color: var(--color-theme-500);
+            color: #fff;
+            font-size: 1.2rem;
+            border: 0;
+            padding: 0.2rem 1rem;
+            width: 180px;
         }
     }
 }
