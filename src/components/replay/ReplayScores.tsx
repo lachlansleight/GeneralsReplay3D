@@ -1,6 +1,6 @@
 import React from "react";
 import { TScore, TSocket } from "../../lib/generals-utils/types";
-import { GetBackgroundColor } from "../../lib/generals-utils/Constants";
+import { GetColor } from "../../lib/generals-utils/Constants";
 
 import style from "./ReplayScores.module.scss";
 
@@ -40,7 +40,7 @@ const ReplayScores = ({
                         <span
                             className={style.username}
                             style={{
-                                backgroundColor: GetBackgroundColor(colors[index]),
+                                backgroundColor: GetColor(colors[index]),
                             }}
                         >
                             {sockets[index].username}

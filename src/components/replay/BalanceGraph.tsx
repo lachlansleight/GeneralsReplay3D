@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { GetBackgroundColor } from "../../lib/generals-utils/Constants";
+import { GetColor } from "../../lib/generals-utils/Constants";
 import { TGame } from "../../lib/generals-utils/types";
 
 import style from "./BalanceGraph.module.scss";
@@ -40,7 +40,6 @@ const BalanceGraph = ({
         if (!clicking) return;
         const parentOffset = getOffset(parentRef.current);
         const x = (e.pageX - parentOffset.left + 1) / parentRef.current.offsetWidth;
-        console.log(x);
         onClick(Math.floor(x * games.length));
     };
 
@@ -87,7 +86,7 @@ const BalanceGraph = ({
                 const yB1 = Math.floor(j === 0 ? height : height - height * points[i][j - 1]);
                 const yB2 = Math.floor(height - height * points[i][j]);
 
-                ctx.fillStyle = GetBackgroundColor(colors[j]);
+                ctx.fillStyle = GetColor(colors[j]);
                 ctx.beginPath();
                 ctx.moveTo(x1, yA1);
                 ctx.lineTo(x1, yA2);
