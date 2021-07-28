@@ -35,6 +35,11 @@ const ReplayControls = ({
     const autoTurnButton = useRef<HTMLButtonElement>(null);
     const nextTurnButton = useRef<HTMLButtonElement>(null);
     const previousTurnButton = useRef<HTMLButtonElement>(null);
+    const speedButton05 = useRef<HTMLButtonElement>(null);
+    const speedButton1 = useRef<HTMLButtonElement>(null);
+    const speedButton2 = useRef<HTMLButtonElement>(null);
+    const speedButton5 = useRef<HTMLButtonElement>(null);
+    const speedButton10 = useRef<HTMLButtonElement>(null);
 
     const animCallback = (time: number) => {
         if (!autoTurn) return;
@@ -52,11 +57,21 @@ const ReplayControls = ({
             if (activeElement) return;
             e.preventDefault();
             if (e.key === "ArrowRight" && !autoTurn && !gameOver) {
-                nextTurnButton.current.click();
+                if(nextTurnButton.current) nextTurnButton.current.click();
             } else if (e.key === "ArrowLeft" && !autoTurn) {
-                previousTurnButton.current.click();
+                if(previousTurnButton.current) previousTurnButton.current.click();
             } else if (e.key === " ") {
-                autoTurnButton.current.click();
+                if(autoTurnButton.current) autoTurnButton.current.click();
+            } else if(e.key === "`") {
+                if(speedButton05.current) speedButton05.current.click();
+            } else if(e.key === "1") {
+                if(speedButton1.current) speedButton1.current.click();
+            } else if(e.key === "2") {
+                if(speedButton2.current) speedButton2.current.click();
+            } else if(e.key === "3") {
+                if(speedButton5.current) speedButton5.current.click();
+            } else if(e.key === "4") {
+                if(speedButton10.current) speedButton10.current.click();
             }
         };
 
@@ -81,6 +96,11 @@ const ReplayControls = ({
         onPreviousTurn,
         gameOver,
         activeElement,
+        speedButton05,
+        speedButton1,
+        speedButton2,
+        speedButton5,
+        speedButton10,
     ]);
 
     const startAutoTurn = (speed: number) => {
@@ -130,19 +150,19 @@ const ReplayControls = ({
                 </button>
                 {autoTurn ? (
                     <div>
-                        <button className={speedClass(0.5)} onClick={() => startAutoTurn(0.5)}>
+                        <button ref={speedButton05} className={speedClass(0.5)} onClick={() => startAutoTurn(0.5)}>
                             0.5x
                         </button>
-                        <button className={speedClass(1)} onClick={() => startAutoTurn(1)}>
+                        <button ref={speedButton1} className={speedClass(1)} onClick={() => startAutoTurn(1)}>
                             1x
                         </button>
-                        <button className={speedClass(2)} onClick={() => startAutoTurn(2)}>
+                        <button ref={speedButton2} className={speedClass(2)} onClick={() => startAutoTurn(2)}>
                             2x
                         </button>
-                        <button className={speedClass(5)} onClick={() => startAutoTurn(5)}>
+                        <button ref={speedButton5} className={speedClass(5)} onClick={() => startAutoTurn(5)}>
                             5x
                         </button>
-                        <button className={speedClass(10)} onClick={() => startAutoTurn(10)}>
+                        <button ref={speedButton10} className={speedClass(10)} onClick={() => startAutoTurn(10)}>
                             10x
                         </button>
                     </div>
