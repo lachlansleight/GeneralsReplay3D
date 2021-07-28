@@ -62,9 +62,9 @@ class BoardScene extends SceneTemplate {
 
         this.scene.background = new THREE.Color("#222");
 
-        this.camera.position.x = -10.21;
-        this.camera.position.y = 13.04;
-        this.camera.position.z = 9.98;
+        this.camera.position.x = 0;
+        this.camera.position.y = 18;
+        this.camera.position.z = -13.5;
 
         this.playerMaterials = [];
         this.playerMutedMaterials = [];
