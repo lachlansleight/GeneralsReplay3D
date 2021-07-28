@@ -57,21 +57,21 @@ const ReplayControls = ({
             if (activeElement) return;
             e.preventDefault();
             if (e.key === "ArrowRight" && !autoTurn && !gameOver) {
-                if(nextTurnButton.current) nextTurnButton.current.click();
+                if (nextTurnButton.current) nextTurnButton.current.click();
             } else if (e.key === "ArrowLeft" && !autoTurn) {
-                if(previousTurnButton.current) previousTurnButton.current.click();
+                if (previousTurnButton.current) previousTurnButton.current.click();
             } else if (e.key === " ") {
-                if(autoTurnButton.current) autoTurnButton.current.click();
-            } else if(e.key === "`") {
-                if(speedButton05.current) speedButton05.current.click();
-            } else if(e.key === "1") {
-                if(speedButton1.current) speedButton1.current.click();
-            } else if(e.key === "2") {
-                if(speedButton2.current) speedButton2.current.click();
-            } else if(e.key === "3") {
-                if(speedButton5.current) speedButton5.current.click();
-            } else if(e.key === "4") {
-                if(speedButton10.current) speedButton10.current.click();
+                if (autoTurnButton.current) autoTurnButton.current.click();
+            } else if (e.key === "`") {
+                if (speedButton05.current) speedButton05.current.click();
+            } else if (e.key === "1") {
+                if (speedButton1.current) speedButton1.current.click();
+            } else if (e.key === "2") {
+                if (speedButton2.current) speedButton2.current.click();
+            } else if (e.key === "3") {
+                if (speedButton5.current) speedButton5.current.click();
+            } else if (e.key === "4") {
+                if (speedButton10.current) speedButton10.current.click();
             }
         };
 
@@ -150,19 +150,39 @@ const ReplayControls = ({
                 </button>
                 {autoTurn ? (
                     <div>
-                        <button ref={speedButton05} className={speedClass(0.5)} onClick={() => startAutoTurn(0.5)}>
+                        <button
+                            ref={speedButton05}
+                            className={speedClass(0.5)}
+                            onClick={() => startAutoTurn(0.5)}
+                        >
                             0.5x
                         </button>
-                        <button ref={speedButton1} className={speedClass(1)} onClick={() => startAutoTurn(1)}>
+                        <button
+                            ref={speedButton1}
+                            className={speedClass(1)}
+                            onClick={() => startAutoTurn(1)}
+                        >
                             1x
                         </button>
-                        <button ref={speedButton2} className={speedClass(2)} onClick={() => startAutoTurn(2)}>
+                        <button
+                            ref={speedButton2}
+                            className={speedClass(2)}
+                            onClick={() => startAutoTurn(2)}
+                        >
                             2x
                         </button>
-                        <button ref={speedButton5} className={speedClass(5)} onClick={() => startAutoTurn(5)}>
+                        <button
+                            ref={speedButton5}
+                            className={speedClass(5)}
+                            onClick={() => startAutoTurn(5)}
+                        >
                             5x
                         </button>
-                        <button ref={speedButton10} className={speedClass(10)} onClick={() => startAutoTurn(10)}>
+                        <button
+                            ref={speedButton10}
+                            className={speedClass(10)}
+                            onClick={() => startAutoTurn(10)}
+                        >
                             10x
                         </button>
                     </div>

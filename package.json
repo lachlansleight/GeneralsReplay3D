@@ -1,6 +1,6 @@
 {
     "name": "generals-replay-3d",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "private": true,
     "dependencies": {
         "@seregpie/three.text-sprite": "^3.2.0",
